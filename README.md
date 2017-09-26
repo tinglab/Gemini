@@ -10,5 +10,14 @@ First you should confirm that your computer is support g++, python and OpenMp. I
 
 Now you can start training data. 
 
+	./Gemini.exe ./trainfile.txt ./outdir/train.ge --train
+
+	./Gemini.exe ./testfile.txt ./outdir/test.ge --test ./outdir/train.ge
 
 #### 3. test
+	
+	./Gemini.sh ./outdir/train.ge ./outdir/test.ge
+
+or you can set a Gemini cutoff like 0.001 (default is 0.01)
+	
+	./Gemini.sh ./outdir/train.ge ./outdir/test.ge 0.001
