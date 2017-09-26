@@ -16,7 +16,6 @@ int hashkey = 28;
 const int hashlen = 300000000;
 int hashcnt[hashlen];
 int* indextable;
-char** refkmer;
 unsigned long long* refencode;
 int** hitindex;
 
@@ -83,7 +82,7 @@ bool checkUnIntOpt(int argc, char* argv[], const char* arg, int& argValue)
 
 bool checkBoolOpt(int argc, char* argv[], const char* arg, bool& argValue)
 {
-    for (int i = 1; i < argc - 1; i++) {
+    for (int i = 1; i < argc; i++) {
         if (strcmp(argv[i], arg) == 0) {
             argValue = true;
             return(true);
@@ -194,18 +193,14 @@ char randomhash(int kmerlen, int hashnum)
 			switch(num)
 			{
 				case 0 : 
-					refkmer[i][j] = 'A';
 					break;
 				case 1 : 
-					refkmer[i][j] = 'C';
 					refencode[i] += 1;
 					break;
 				case 2 :
-					refkmer[i][j] = 'G';
 					refencode[i] += 2;
 					break;
 				case 3 :
-					refkmer[i][j] = 'T';
 					refencode[i] += 3;
 					break;
 				default :
@@ -306,13 +301,9 @@ void doHash(char* read, int kmerlen, bool* hit)
 
 void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2)
 {
-	refkmer = new char* [hashnum];
 	refencode = new unsigned long long [hashnum];
 	for (int i = 0; i < hashnum; i++)
-	{
 		refencode[i] = 0;
-		refkmer[i] = new char [kmerlen];
-	}
 
 	if (paramt.readhash)
 	{
