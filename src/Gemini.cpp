@@ -18,7 +18,7 @@ int hashcnt[hashlen];
 int* indextable;
 unsigned long long* refencode;
 int** hitindex;
-
+bool* isless;
 
 struct Parameter
 {
@@ -40,7 +40,22 @@ struct Parameter
 	char outdir[100];
 	char infile[100];
 	int threadnum;
+	bool help;
 }paramt;
+
+string myhelp = "some Gemini paramters you can set:\n\n\
+-l [int]		set the kmer length\n\
+-n [int]		set the kmer number\n\
+-h [int]		set the item number in hash table\n\
+-m [int]		set the m of minhash\n\
+--training		get train data's hash matrix\n\
+--test [train.ge]	get test data's hash matrix\n\
+-sh [filename]		save the hash table\n\
+-rh [filename]		read hash table exist\n\
+-sk [filename]		save kmer\n\
+-rk [filename]		read kmer\n\n\
+the standard format is as follows:\n\
+Gemini inputfile(filelist) outputfile [some paramters]";
 
 void setDefault()
 {
@@ -110,6 +125,11 @@ void catString(string str, int& start, int& end)
 
 bool getParameter(int argc, char* argv[])
 {
+	if (checkBoolOpt(argc, argv, "--help", paramt.help))
+	{
+		printf("%s\n", myhelp.c_str());
+		return false;
+	}
 	if (argc < 3)
 	{
 		printf("the Parameter is too less, must contain input file and output file\n");
@@ -349,6 +369,7 @@ void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2
 	
 
 	hitindex = new int* [filenum];
+	isless = new bool [filenum];
 	for (int i = 0; i < filenum; i++)
 		hitindex[i] = new int [minnum];
 
@@ -385,9 +406,11 @@ void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2
 		if (readnum < randnum)
 		{
 			printf("the read in file is too less\n");
+			isless[j] = true;
 		}
 		else
 		{
+			isless[j] = false;
 			bool* hit = new bool [hashnum];
 			int* pos = new int [randnum];
 			srand((unsigned)time(0));
@@ -441,6 +464,10 @@ void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2
 		}
 	}
 
+	int realfile = 0;
+	for (int i = 0; i < filenum; i++)
+		if (isless[i] == false)
+			realfile += 1;
 	FILE* fo;
 	fo = fopen(paramt.outdir, "w");
 	fprintf(fo, "#hashtable=%s\n", paramt.shfile);
@@ -449,10 +476,12 @@ void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2
 	fprintf(fo, "#hashnum=%d\n", paramt.hashnum);
 	fprintf(fo, "#minnum=%d\n", paramt.minnum);
 	fprintf(fo, "#threadnum=%d\n", paramt.threadnum);
-	fprintf(fo, "#filenum=%d\n", filenum);
+	fprintf(fo, "#filenum=%d\n", realfile);
 
 	for (int i = 0; i < filenum; i++)
 	{
+		if (isless[i] == true)
+			continue;
 		int start, end;
 		catString(filename[i], start, end);
 		fprintf(fo, "%s\n", filename[i].substr(start, (end-start)).c_str());
@@ -468,11 +497,10 @@ void getMat(int kmerlen, int hashnum, int kmernum, int minnum, int threadnum = 2
 
 int main(int argc, char* argv[])
 {
-	time(&startt);
 	setDefault();
 	if(getParameter(argc, argv))
 	{
-		
+		time(&startt);
 		printf("%s, %s, %d, %d, %d, %s, %d, %s, %d, %s, %d, %s, %d, %d, %d, %d %d\n", 
 		paramt.infile, paramt.outdir, paramt.train, paramt.test,
 		paramt.readhash, paramt.hashfile, paramt.readkmer, paramt.kmerfile, 
@@ -480,10 +508,10 @@ int main(int argc, char* argv[])
 		paramt.kmerlen, paramt.kmernum, paramt.hashnum, paramt.minnum, paramt.threadnum);
 	
 		getMat(paramt.kmerlen, paramt.hashnum, paramt.kmernum, paramt.minnum, paramt.threadnum);
+		time(&endt);
+		cout << "using CPU hours:" << (unsigned int)(endt - startt) << endl;
 	}
 	//getMat(18, 60000000, 1000000000, 10000, 2);
 	
-	time(&endt);
-	cout << "using CPU hours:" << (unsigned int)(endt - startt) << endl;
 	return 0;
 }
