@@ -14,6 +14,17 @@ Now you can start training data.
 
 	./Gemini.exe ./testfile.txt ./outdir/test.ge --test ./outdir/train.ge
 
+-l: kmerlen
+-n: kmernum
+-h: hashnum
+-m: minnum
+-t: threadnum
+-rh: read hashtable
+-sh: save hashtable
+-rk: read kmer
+-sk: save kmer
+
+
 #### 3. test
 	
 	./Gemini.sh ./outdir/train.ge ./outdir/test.ge
