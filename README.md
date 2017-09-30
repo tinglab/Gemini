@@ -4,15 +4,15 @@
 
 First you should confirm that your computer is support g++, python and OpenMp. If all of them is ok, then you could compile our code as follows
 
-	g++ ./Gemini.cpp -fopenmp -o Gemini.exe
+	g++ ./Gemini.cpp -fopenmp -o Gemini
 
 #### 2. training data
 
 Now you can start training data. 
 
-	./Gemini.exe ./trainfile.txt ./outdir/train.ge --train
+	./Gemini ./trainfile.txt ./outdir/train.ge --train
 
-	./Gemini.exe ./testfile.txt ./outdir/test.ge --test ./outdir/train.ge
+	./Gemini ./testfile.txt ./outdir/test.ge --test ./outdir/train.ge
 
 --help
 

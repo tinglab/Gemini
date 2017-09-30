@@ -1,0 +1,4 @@
+/data/princello/data/diets/fastq/EK_1.fastq
+/data/princello/data/diets/fastq/EK_2.fastq
+/data/princello/data/diets/fastq/EK_3.fastq
+/data/princello/data/diets/fastq/EK_4.fastq
