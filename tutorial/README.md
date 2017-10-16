@@ -1,6 +1,6 @@
 This is an example of how to use Gemini to test your own data
 
-In Gemini, we provide a data that has been trained(../data/train.ge). So you can use your data for testing directly.
+In Gemini, we provide a data that has been trained(../data/train.ge) and a hash table(../data/hashtable.*, you can unzip them and there will be a file named "hashtable"). So you can use your data for testing directly.
 
 In this tutorial, our test data is from [https://www.ebi.ac.uk/metagenomics/projects/ERP005558]. First we need creat a filelist like _testfile.txt_. Then, run the following instructions
 
